@@ -16,9 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Container(
       margin:const EdgeInsets.only(right: 8,left:8,top:50),
-      child: const Column(
+      child: Column(
         children: [
-          Top(),
+          const Top(),
           TimeTable()
         ],
       ),
