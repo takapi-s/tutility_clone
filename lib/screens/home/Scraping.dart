@@ -20,13 +20,14 @@ class ScrapingScreen extends StatelessWidget {
 }
 
 class _ScrapingScreenState extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     final ClassProvider data = Provider.of<ClassProvider>(context);
 
     final controller = WebViewController()
-      ..loadRequest(Uri.parse(
-          'https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx'))
+      ..loadRequest(Uri.parse('https://kyomu.office.tut.ac.jp/portal/'))
       //https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
@@ -39,10 +40,10 @@ class _ScrapingScreenState extends StatelessWidget {
             log('page started: $url');
 
           },
-          onPageFinished: (String url) {
+          onPageFinished: (String url) async {
+
+            await data.getHtmlData("https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx");
             log('page finished: $url');
-            data.getHtmlData(url);
-            Navigator.pop(context);
           },
           onWebResourceError: (WebResourceError error) {
             log('error: $error');
@@ -51,6 +52,8 @@ class _ScrapingScreenState extends StatelessWidget {
         ),
       );
 
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("TimeTable get"),
@@ -58,6 +61,8 @@ class _ScrapingScreenState extends StatelessWidget {
       body: Container(
         child: WebViewWidget(
           controller: controller,
+
+
         ),
       ),
     );
