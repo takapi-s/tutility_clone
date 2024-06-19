@@ -1,9 +1,8 @@
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:universal_html/html.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../model/class_model.dart';
-import "package:universal_html/controller.dart";
 
 
 //データを保存するdart
@@ -15,6 +14,10 @@ class ClassProvider with ChangeNotifier{
   //からの30要素を持つリストにする
   //２次元配列にする
   List<List<ClassModel>> classModelMatrix = List.generate(5, (i) => List.filled(6, ClassModel(className: "")));
+  var controller = WebViewController();
+  var url = 'https://kyomu.office.tut.ac.jp/portal/';
+
+
   //追加する関数
   void addClassModelList(String className, int weekNum, int periodNum){
     ClassModel a = ClassModel(
@@ -26,21 +29,22 @@ class ClassProvider with ChangeNotifier{
     //notifyListeners();
   }
 
-  Future<void> getHtmlData(String url) async {
-    log('get: $url');
-    final controller = WindowController();
-    await controller.openHttp(uri: Uri.parse(url));
-    final elements = controller.window!.document.querySelectorAll("span");
-    log("fff");
-    if(elements.isEmpty){
-      log("ee");
-    }
-    for(final element in elements){
-      log('element: $element');
-    }
-    log("ff");
+  void changeUrl(String u){
+    url = u;
+    notifyListeners();
   }
+
+  Future<void> getHtmlData(var html) async {
+
+    log('get: $html');
+  }
+
+
+
+
+
+
+
+
 }
-
-
 
