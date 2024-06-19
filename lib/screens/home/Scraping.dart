@@ -25,6 +25,7 @@ class ScrapingScreen extends StatelessWidget {
 class _ScrapingScreenState extends StatelessWidget {
 
 
+
   @override
   Widget build(BuildContext context) {
     final ClassProvider data = Provider.of<ClassProvider>(context);

@@ -13,12 +13,27 @@ class ClassProvider with ChangeNotifier {
   //２次元配列にする
   List<List<ClassModel>> classModelMatrix =
       List.generate(5, (i) => List.filled(6, ClassModel(className: "")));
-  var controller = WebViewController();
+  List<String> spans = [];
   String url = "";
+  WebViewController controller = WebViewController();
+
 
   ClassProvider() {
+    //初期化
     this.url = 'https://kyomu.office.tut.ac.jp/portal/';
+    this.spans = [];
+    this.controller = WebViewController()
+      ..addJavaScriptChannel("flutterApp",
+          onMessageReceived: (result) async {
+            // result.message でJSからのデータを取得可能
+
+            if((result.message != "")||(result.message != "当選")){
+              spans.add(result.message);
+            }
+          }
+      );
   }
+
 
   //追加する関数
   void addClassModelList(String className, int weekNum, int periodNum) {
@@ -37,24 +52,13 @@ class ClassProvider with ChangeNotifier {
   }
 
   Future<void> getHTML() async {
-    // var spans = await controller.runJavaScriptReturningResult("""
-    //
-    //
-    // window.document.querySelectorAll('span');
-    // window.document.querySelectorAll('span').forEach(span => {
-    // console.log(span.textContent);
-    // });
-    // """);
-
     var spans = await controller.runJavaScriptReturningResult("""
     var spansArray = Array.from(window.document.querySelectorAll('span'));
     spansArray.forEach(span => {
-    console.log(span.textContent);
+      //console.log(span.textContent);
+      flutterApp.postMessage(span.textContent);
     });
     spansArray;
-    
     """);
-
-    print(spans);
   }
 }
