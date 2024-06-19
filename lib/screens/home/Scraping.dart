@@ -23,19 +23,13 @@ class ScrapingScreen extends StatelessWidget {
 }
 
 class _ScrapingScreenState extends StatelessWidget {
-  int c = 0;
-  // Future<void> getHTML() async {
-  //   html = await _controller.runJavaScriptReturningResult("""
-  //   window.document.querySelectorAll('span');
-  //   window.document.querySelectorAll('span').forEach(span => {
-  //   console.log(span.textContent);
-  //   });
-  //   """);
-  // }
+
 
   @override
   Widget build(BuildContext context) {
     final ClassProvider data = Provider.of<ClassProvider>(context);
+
+    //data.changeUrl( 'https://kyomu.office.tut.ac.jp/portal/');
 
     final controller = data.controller
       ..loadRequest(Uri.parse(data.url))
@@ -59,23 +53,33 @@ class _ScrapingScreenState extends StatelessWidget {
             //
             // }
 
-            if ((url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Top.aspx") & (c == 0)) {
+            if (url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Top.aspx") {
               var u = url;
               log("req1: $u");
-              data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results");
-              c = 1;
-              sleep(Duration(seconds: 1));
-            }else{
+              data.controller.runJavaScript(
+                  "document.getElementById('ctl00_bhHeader_ctl16_lnk').click();"
+              );
+              //await data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results");
+              //<a id="ctl00_bhHeader_ctl16_lnk" href="javascript:__doPostBack('ctl00$bhHeader$ctl16$lnk','')">履修・成績情報<br><span style="line-height:100%;">Course grades</span></a>
+
+              sleep(const Duration(seconds: 1));
+            }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results"){
+              //urlを押す処理を追加する
               log("dd");
-              data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx");
-              sleep(Duration(seconds: 1));
+              data.controller.runJavaScript(
+                  "document.getElementById('ctl00_bhHeader_ctl30_lnk').click();"
+              );
+              //await data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx");
+              sleep(const Duration(seconds: 1));
+            }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx"){
+              log("ff: $url");
+              data.getHTML();
             }
           },
           onWebResourceError: (WebResourceError error) {
             log('error: $error');
           },
           onNavigationRequest: (NavigationRequest request){
-
             return NavigationDecision.navigate;
           },
         ),
