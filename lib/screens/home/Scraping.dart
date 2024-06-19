@@ -74,7 +74,7 @@ class _ScrapingScreenState extends StatelessWidget {
               sleep(const Duration(seconds: 1));
             }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx"){
               log("ff: $url");
-              data.getHTML();
+              await data.getHTML();
             }
           },
           onWebResourceError: (WebResourceError error) {
