@@ -14,12 +14,11 @@ class ScrapingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Provider<T>() で子Widgetにデータを渡す
     // ※ 渡すデータの クラス と <T> は揃えましょう
-    return ChangeNotifierProvider<ClassProvider>(
+    return ChangeNotifierProvider(
       // 渡すデータ
       create: (context) => ClassProvider(),
-      child: Container(
-        child: _ScrapingScreenState(),
-      ),
+      child: _ScrapingScreenState(),
+
     );
   }
 }
@@ -31,6 +30,10 @@ class _ScrapingScreenState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ClassProvider data = Provider.of<ClassProvider>(context);
+    bool sw1 = true;
+    bool sw2 = true;
+    bool sw3 = true;
+
 
     //data.changeUrl( 'https://kyomu.office.tut.ac.jp/portal/');
 
@@ -47,37 +50,32 @@ class _ScrapingScreenState extends StatelessWidget {
             log('page started: $url');
           },
           onPageFinished: (String url) async {
-            // if (url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Top.aspx") {
-            //   const redirectURL = "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx";
-            //   await _controller.loadRequest(Uri.parse(redirectURL));
-            //   getHTML();
-            //   await data.getHtmlData(html);
-            //   log('page finished: $url');
-            //
-            // }
 
-            if (url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Top.aspx") {
-              var u = url;
-              log("req1: $u");
-              data.controller.runJavaScript(
+            if ((url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Top.aspx") & (sw1 == true)) {
+              log("ll");
+              sw1 = false;
+              sleep(Duration(seconds: 1));
+              await data.controller.runJavaScript(
                   "document.getElementById('ctl00_bhHeader_ctl16_lnk').click();"
               );
-              //await data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results");
-              //<a id="ctl00_bhHeader_ctl16_lnk" href="javascript:__doPostBack('ctl00$bhHeader$ctl16$lnk','')">履修・成績情報<br><span style="line-height:100%;">Course grades</span></a>
 
-              sleep(const Duration(seconds: 1));
-            }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results"){
+            }else if((url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Blank.aspx#regist_results")& (sw2 == true)){
               //urlを押す処理を追加する
               log("dd");
-              data.controller.runJavaScript(
+              sw2 = false;
+              sleep(Duration(seconds: 1));
+
+              await data.controller.runJavaScript(
                   "document.getElementById('ctl00_bhHeader_ctl30_lnk').click();"
               );
-              //await data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx");
-              sleep(const Duration(seconds: 1));
-            }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx"){
-              log("ff: $url");
+              //await data.changeUrl("https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx")& (sw1 == true));
+
+            }else if((url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx")& (sw3 == true)){
+              sw3 = false;
+              log("ff");
+              sleep(Duration(seconds: 1));
               await data.getHTML();
-              sleep(const Duration(seconds: 1));
+
               Navigator.of(context).pop();
             }
           },

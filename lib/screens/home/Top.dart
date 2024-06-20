@@ -12,25 +12,31 @@ class Top extends StatefulWidget {
 class _TopState extends State<Top> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Align(
-          alignment: Alignment.center,
-          child: CapsuleButton(),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ScrapingScreen())
-              );
-            },
-            icon: const Icon(Icons.download),
+    return Container(
+      //margin: const EdgeInsets.only(top: 35),
+      height: 100,
+      margin: EdgeInsets.only(top: 30),
+      child:Stack(
+        children: [
+          const Align(
+            alignment: Alignment.center,
+            child: CapsuleButton(),
           ),
-        )
-      ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ScrapingScreen())
+                );
+              },
+              icon: const Icon(Icons.download),
+            ),
+          )
+        ],
+      ),
     );
+
   }
 }
 

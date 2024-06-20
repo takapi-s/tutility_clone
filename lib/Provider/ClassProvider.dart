@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:universal_html/controller.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -23,6 +24,7 @@ class ClassProvider with ChangeNotifier {
   WebViewController controller = WebViewController();
 
   ClassProvider() {
+    log("ClassProvide inicialize");
     //初期化
     this.url = 'https://kyomu.office.tut.ac.jp/portal/';
     this.urls = [];
@@ -34,7 +36,10 @@ class ClassProvider with ChangeNotifier {
           urls.add(result.message);
         }
       });
+
+    this.timeTable = [];
   }
+
 
   Future<void> changeUrl(String u) async {
     url = u;
@@ -50,31 +55,29 @@ class ClassProvider with ChangeNotifier {
       var elements = controller.window!.document.querySelectorAll("span");
 
       List<String> elementList = [];
-      for(var e in elements){
-        if((e.text! ==  "科目名[英文名]") ||
-            (e.text! ==  "区分")||
-            (e.text! ==  "選択必須")||
-            (e.text! ==  "開講学期")||
-            (e.text! ==  "曜日時限")||
-            (e.text! ==  "単位数")||
-            (e.text! ==  "担当教員[ローマ字表記]")
-        )
-        {
+      for (var e in elements) {
+        if ((e.text! == "科目名[英文名]") ||
+            (e.text! == "区分") ||
+            (e.text! == "選択必須") ||
+            (e.text! == "開講学期") ||
+            (e.text! == "曜日時限") ||
+            (e.text! == "単位数") ||
+            (e.text! == "担当教員[ローマ字表記]")) {
           sw = true;
-        }else{
-          if(sw){
-            log(e.text!);
+        } else {
+          if (sw) {
+            //log(e.text!);
             elementList.add(e.text!);
             sw = false;
           }
         }
       }
-      String weekday = elementList[4].substring(0,1);//水5~5
-      int startTime = int.parse(elementList[4].substring(1,2)); // String から int に変換
-      int endTime = int.parse(elementList[4].substring(3,4));//水5~5
+      String weekday = elementList[4].substring(0, 1); //水5~5
+      int startTime = int.parse(elementList[4].substring(1, 2)); // String から int に変換
+      int endTime = int.parse(elementList[4].substring(3, 4)); //水5~5
 
-    int weekNum = 0;
-      switch(weekday){
+      int weekNum = 0;
+      switch (weekday) {
         case "月":
           weekNum = 0;
           break;
@@ -93,20 +96,31 @@ class ClassProvider with ChangeNotifier {
         case "土":
           weekNum = 5;
           break;
-
       }
 
       ClassModel cc = ClassModel();
-      for(int time = startTime - 1;time < endTime;time++){
-        cc.setClass(elementList[0], elementList[1], elementList[2], elementList[3], elementList[5], elementList[6], weekNum, time);
+      for (int time = startTime - 1; time < endTime; time++) {
+        cc.setClass(
+            elementList[0],
+            elementList[1],
+            elementList[2],
+            elementList[3],
+            elementList[5],
+            elementList[6],
+            weekNum,
+            time);
 
         timeTable.add(cc);
-
       }
-
-
     }
+
+    for(int kk = 0; kk < timeTable.length ; kk++){
+
+      log(timeTable[kk].className);
+    }
+
     notifyListeners();
+
   }
 
   Future<void> getHTML() async {
@@ -127,5 +141,14 @@ class ClassProvider with ChangeNotifier {
     await urlsToTimeTable();
 
     //timeTable.printModel();
+  }
+
+  ClassModel? getModel(int weekNum, int time) {
+    for (int k = 0; k < timeTable.length; k++) {
+      if ((timeTable[k].weekNum == weekNum) & (timeTable[k].time == time)) {
+        return timeTable[k];
+      }
+    }
+    return null;
   }
 }

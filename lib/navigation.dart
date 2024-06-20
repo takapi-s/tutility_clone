@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tutility_clone/screens/home/Top.dart';
 import 'screens/home.dart';
 import 'screens/other.dart';
 
@@ -15,6 +16,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     HomeScreen(),
     OtherScreen()
   ];
+
   int _selectedIndex = 0;
 
   @override
@@ -23,7 +25,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     return Scaffold(
       body: _screens[_selectedIndex],
-
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index){
           setState(() {
@@ -37,6 +38,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             label: 'Timetable',
           ),
           NavigationDestination(
+            selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.more_horiz),
             label: 'Other',
           ),
