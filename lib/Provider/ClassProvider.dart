@@ -14,7 +14,9 @@ class ClassProvider with ChangeNotifier {
   //２次元配列にする
   //List<List<ClassModel>> classModelMatrix = List.generate(9, (i) => List.filled(6, []));
 
-  TimeTableModel timeTable = TimeTableModel();
+  //TimeTableModel timeTable = TimeTableModel();
+
+  List<ClassModel> timeTable = [];
 
   List<String> urls = [];
   String url = "";
@@ -42,13 +44,16 @@ class ClassProvider with ChangeNotifier {
   Future<void> urlsToTimeTable() async {
     bool sw = false;
     for (int i = 0; i < urls.length; i++) {
-      log(urls[i]);
+      //log(urls[i]);
       final controller = WindowController();
       await controller.openHttp(uri: Uri.parse(urls[i]));
       var elements = controller.window!.document.querySelectorAll("span");
+
+      List<String> elementList = [];
       for(var e in elements){
         if((e.text! ==  "科目名[英文名]") ||
             (e.text! ==  "区分")||
+            (e.text! ==  "選択必須")||
             (e.text! ==  "開講学期")||
             (e.text! ==  "曜日時限")||
             (e.text! ==  "単位数")||
@@ -59,11 +64,49 @@ class ClassProvider with ChangeNotifier {
         }else{
           if(sw){
             log(e.text!);
+            elementList.add(e.text!);
             sw = false;
           }
         }
       }
+      String weekday = elementList[4].substring(0,1);//水5~5
+      int startTime = int.parse(elementList[4].substring(1,2)); // String から int に変換
+      int endTime = int.parse(elementList[4].substring(3,4));//水5~5
+
+    int weekNum = 0;
+      switch(weekday){
+        case "月":
+          weekNum = 0;
+          break;
+        case "火":
+          weekNum = 1;
+          break;
+        case "水":
+          weekNum = 2;
+          break;
+        case "木":
+          weekNum = 3;
+          break;
+        case "金":
+          weekNum = 4;
+          break;
+        case "土":
+          weekNum = 5;
+          break;
+
+      }
+
+      ClassModel cc = ClassModel();
+      for(int time = startTime - 1;time < endTime;time++){
+        cc.setClass(elementList[0], elementList[1], elementList[2], elementList[3], elementList[5], elementList[6], weekNum, time);
+
+        timeTable.add(cc);
+
+      }
+
+
     }
+    notifyListeners();
   }
 
   Future<void> getHTML() async {

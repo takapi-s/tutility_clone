@@ -8,6 +8,8 @@ import "package:webview_flutter/webview_flutter.dart";
 
 
 class ScrapingScreen extends StatelessWidget {
+  const ScrapingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Provider<T>() で子Widgetにデータを渡す
@@ -75,6 +77,8 @@ class _ScrapingScreenState extends StatelessWidget {
             }else if(url == "https://kyomu.office.tut.ac.jp/portal/StudentApp/Regist/RegistList.aspx"){
               log("ff: $url");
               await data.getHTML();
+              sleep(const Duration(seconds: 1));
+              Navigator.of(context).pop();
             }
           },
           onWebResourceError: (WebResourceError error) {
@@ -92,7 +96,7 @@ class _ScrapingScreenState extends StatelessWidget {
       ),
       body: Container(
         child: WebViewWidget(
-          controller: data.controller,
+          controller: controller,
         ),
       ),
     );

@@ -5,13 +5,16 @@
 import 'package:universal_html/html.dart';
 
 class ClassModel {//授業クラス
-  String code = "";
   String credit = "";
-  String semester = "";
+  String category = "";
   String kind = "";
+  String semester = "";
   String className = ""; //授業名
   String cancelName = "";
   String teacher = "";
+
+  int weekNum = -1;
+  int time = -1;
 
   // int weekNum = -1;//授業ある曜日　月から金　0-4
   // int periodNum = -1;//次元　0-5
@@ -28,18 +31,27 @@ class ClassModel {//授業クラス
   ClassModel();
 
 
-  void setClass(  String code, String credit, String semester, String kind, String className,String cancelName, String teacher){
-    this.code = code;
-    this.credit = credit;
-    this.semester = semester;
-    this.kind = kind;
+  void setClass( String className,String category, String kind, String credit, String semester,   String teacher, int weekNum, int time){
+    // [log] 英語 Reading & Writing Ⅲ
+    // [log] 外国語科目
+    // [log] 選択
+    // [log] 前期
+    // [log] 金2〜2
+    // [log] 1
+    // [log] 大木  ひろみ
     this.className = className;
-    this.cancelName = cancelName;
+    this.category = category;
+    this.kind = kind;
+    this.semester = semester;
+    this.credit = credit;
     this.teacher = teacher;
+
+    this.weekNum = weekNum;
+    this.time = time;
   }
 
   bool isEmpty(){
-    if(this.code == ""){
+    if(this.className == ""){
       return true;
     }
     return false;
@@ -93,13 +105,15 @@ class TimeTableModel {
     return timeTable[i][j].setPeriod(classModel);
   }
 
+
   void printModel(){
     for(int i = 0;i < 9;i++){
       for(int j = 0;j < 6;j++){
-        print(timeTable[i][j].getPeriod(true).code);
+        print(timeTable[i][j].getPeriod(true).className);
       }
     }
   }
+
 
 
 }

@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           const Top(),
+          Text("ひにち"),
           TimeTable()
         ],
       ),
